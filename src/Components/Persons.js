@@ -4,7 +4,7 @@ import PersonItem from "./PersonItem";
 const Persons =({people}) => {
 
     const nameElements = people.map(p => {
-        return <PersonItem name={p.name} number={p.number} />
+        return <PersonItem key={p.id} name={p.name} number={p.number} />
       })
     return (
         <div>

@@ -1,35 +1,52 @@
 import React, { useState, useEffect } from 'react'
+import SearchBar from './components/SearchBar'
+import Form from './components/Form'
+import Persons from './components/Persons'
 import axios from 'axios'
-import Note from './components/Note'
+
 
 const App = () => {
-  const [notes, setNotes] = useState([])
-  const [newNote, setNewNote] = useState('')
-  const [showAll, setShowAll] = useState(true)
+  const [ persons, setPersons ] = useState([]) 
+  const [newName, setNewName ] = useState('')
+  const [newNum, setNewNum] = useState('')
+  const [search, setSearch] = useState('')
 
-  const hook = () => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/notes')
-      .then(response => {
-        console.log('promise fulfilled')
-        setNotes(response.data)
-      })
+  useEffect(() =>{
+    axios.get('http://localhost:3001/persons ')
+      .then(res => setPersons(res.data))
+  }, [])
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    let personObj = {
+      name: newName,
+      number: newNum
+    }
+    const isUnique =persons.find(p => {
+    return p.name===personObj.name
+    })
+    if (isUnique) {
+      window.alert(`${personObj.name} is already added to the phonebook`)
+    } else {
+      setPersons(persons.concat(personObj))
+      setNewName('')
+      setNewNum('')
+    }
   }
-  
-  useEffect(hook, [])
+  const searchedNames = persons.filter(p => {
+    return p.name.toLowerCase().includes(search.toLowerCase())
+  })
 
-  
-    return (
-      <div>
-        <h1>Notes</h1>
-        <ul>
-          {notes.map(note => 
-              <Note key={note.id} note={note} />
-          )}
-        </ul>
-      </div>
-    )
+
+  return (
+    <div>
+      <h2>Phonebook</h2>
+      <SearchBar search={search} setSearch={setSearch} />
+      <Form newName={newName} newNum={newNum} setNewName={setNewName} setNewNum={setNewNum} handleSubmit={handleSubmit}/>
+      <Persons people={searchedNames}/>
+    </div>
+  )
 }
 
 export default App;
