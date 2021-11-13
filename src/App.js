@@ -12,18 +12,20 @@ const App = () => {
     return c.name.common.toLowerCase().includes(search)
   })
 
+  
+
 
 
   useEffect(() => {
     axios.get('https://restcountries.com/v3.1/all')
     .then(res => {
       setCountries(res.data)})
-  }, [])
+  }, [search])
 
   return (
     <div>
       <SearchBar search={search} setSearch={setSearch}/>
-      <CountriesList countries={searchedCountries} />
+      <CountriesList countries={searchedCountries} setCountries={setCountries}/>
     </div>
   )
 }
