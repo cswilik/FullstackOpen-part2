@@ -3,6 +3,7 @@ import SearchBar from './components/SearchBar'
 import Form from './components/Form'
 import Persons from './components/Persons'
 import personService from './services/persons'
+import Notification from './components/Notification'
 
 
 const App = () => {
@@ -10,6 +11,7 @@ const App = () => {
   const [newName, setNewName ] = useState('')
   const [newNum, setNewNum] = useState('')
   const [search, setSearch] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     personService.getAll()
@@ -40,12 +42,20 @@ const App = () => {
         .then(person => {
           setPersons(persons.map(p => p.id !== person.id ? p : person))
         })
+        setErrorMessage(`${isUnique.name}'s number has been updated`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
       }
     } else {
       personService.createOne(personObj)
       .then(res => {
         setPersons(persons.concat(res))
       })
+      setErrorMessage(`${personObj.name} has been added to the phonebook`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
       setNewName('')
       setNewNum('')
     }
@@ -75,6 +85,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification message={errorMessage}/>
       <h2>Phonebook</h2>
       <SearchBar search={search} setSearch={setSearch} />
       <Form newName={newName} newNum={newNum} setNewName={setNewName} setNewNum={setNewNum} handleSubmit={handleSubmit}/>
