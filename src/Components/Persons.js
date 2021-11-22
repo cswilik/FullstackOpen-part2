@@ -1,10 +1,10 @@
 import React from "react";
 import PersonItem from "./PersonItem";
 
-const Persons =({people}) => {
+const Persons =({people, handleRemovePerson}) => {
 
     const nameElements = people.map(p => {
-        return <PersonItem name={p.name} number={p.number} />
+        return <PersonItem key ={p.id} id ={p.id} name={p.name} number={p.number} handleRemovePerson={handleRemovePerson} />
       })
     return (
         <div>
