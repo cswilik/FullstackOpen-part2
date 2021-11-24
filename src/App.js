@@ -42,10 +42,20 @@ const App = () => {
         .then(person => {
           setPersons(persons.map(p => p.id !== person.id ? p : person))
         })
-        setErrorMessage(`${isUnique.name}'s number has been updated`)
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 5000)
+        .catch(error => {
+          if (error) {
+          setErrorMessage(`${updatedNum.name} has already been removed from our phone book`)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+          setPersons(persons.filter(p => p.id !== updatedNum.id))
+          } else {
+            setErrorMessage(`${isUnique.name}'s number has been updated`)
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
+          }
+        })
       }
     } else {
       personService.createOne(personObj)
